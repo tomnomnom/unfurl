@@ -1,1 +1,5 @@
 unfurl
+*.swp
+*.tgz
+*.exe
+*.zip

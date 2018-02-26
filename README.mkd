@@ -2,6 +2,115 @@
 
 Pull out bits of URLs provided on `stdin`
 
+## Install
+
+If you have Go installed and configured:
+
+```
+▶ go get -u github.com/tomnomnom/unfurl
+```
+
+Otherwise [download the latest binary for your platform](https://github.com/tomnomnom/unfurl),
+extract it and move it to somewhere in your `$PATH` (e.g. `/usr/bin/`):
+
+```
+▶ wget https://github.com/tomnomnom/unfurl/releases/download/v0.0.1/unfurl-linux-amd64-0.0.1.tgz
+▶ tar xzf unfurl-linux-amd64-0.0.1.tgz
+▶ sudo mv unfurl /usr/bin/
+```
+
+## Usage
+
+unfurl works with URLs provided on stdin; they might come from a file like this one:
+
+```
+▶ cat urls.txt
+https://sub.example.com/users?id=123&name=Sam
+https://sub.example.com/orgs?org=ExCo#about
+http://example.net/about#contact
+```
+
+### Domains
+
+You can extract the domains from the URLs with the `domains` mode:
+
+```
+▶ cat urls.txt | unfurl domains
+sub.example.com
+sub.example.com
+example.net
+```
+
+If you don't want to output duplicate values you can use the `-u` or `--unique` flag:
+
+```
+▶ cat urls.txt | unfurl --unique domains
+sub.example.com
+example.net
+```
+
+The `-u`/`--unique` flag works for all modes.
+
+### Paths
+
+```
+▶ cat urls.txt | unfurl paths
+/users
+/orgs
+/about
+```
+
+### Query String Keys
+
+```
+▶ cat urls.txt | unfurl keys
+id
+name
+org
+```
+
+### Query String Values
+
+```
+▶ cat urls.txt | unfurl values
+123
+Sam
+ExCo
+```
+
+### Custom Formats
+
+You can use the `format` mode to specify a custom output format:
+
+```
+▶ cat urls.txt | unfurl format %d%p
+sub.example.com/users
+sub.example.com/orgs
+example.net/about
+```
+
+The available format directives are:
+
+```
+%%  A literal percent character
+%s  The request scheme (e.g. https)
+%d  The domain (e.g. sub.example.com)
+%P  The port (e.g. 8080)
+%p  The path (e.g. /users)
+%q  The raw query string (e.g. a=1&b=2)
+%f  The page fragment (e.g. page-section)
+```
+
+Any characters that don't match a format directive remain untouched:
+
+```
+▶ cat urls.txt | unfurl -u format "%d (%s)"
+sub.example.com (https)
+example.net (http)
+```
+
+
+
 ## Help
 
 ```
