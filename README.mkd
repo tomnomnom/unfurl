@@ -10,7 +10,7 @@ If you have Go installed and configured:
 ▶ go get -u github.com/tomnomnom/unfurl
 ```
 
-Otherwise [download the latest binary for your platform](https://github.com/tomnomnom/unfurl),
+Otherwise [download the latest binary for your platform](https://github.com/tomnomnom/unfurl/releases),
 extract it and move it to somewhere in your `$PATH` (e.g. `/usr/bin/`):
 
 ```
