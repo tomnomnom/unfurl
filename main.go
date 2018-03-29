@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"github.com/weppos/publicsuffix-go/publicsuffix"
 	"net/url"
 	"os"
 )
@@ -30,6 +31,7 @@ func main() {
 		"domains": domains,
 		"paths":   paths,
 		"format":  format,
+		"public":  suffixes,
 	}[mode]
 
 	if !ok {
@@ -107,6 +109,11 @@ func paths(u *url.URL, f string) []string {
 	return format(u, "%p")
 }
 
+func suffixes(u *url.URL, f string) []string {
+	publicName := fmt.Sprint(publicsuffix.Domain(u.Hostname()))
+	return []string{publicName}
+}
+
 func format(u *url.URL, f string) []string {
 	out := &bytes.Buffer{}
 
@@ -166,7 +173,8 @@ func init() {
 		h += "  values   Values from the query string (one per line)\n"
 		h += "  domains  The hostname (e.g. sub.example.com)\n"
 		h += "  paths    The request path (e.g. /users)\n"
-		h += "  format   Specify a custom format (see below)\n\n"
+		h += "  format   Specify a custom format (see below)\n"
+		h += "  public The public part of the registered name\n\n"
 
 		h += "Format Directives:\n"
 		h += "  %%  A literal percent character\n"
