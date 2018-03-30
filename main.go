@@ -28,7 +28,9 @@ func main() {
 		"keys":    keys,
 		"values":  values,
 		"domains": domains,
+		"domain":  domains,
 		"paths":   paths,
+		"path":    paths,
 		"format":  format,
 	}[mode]
 
@@ -79,8 +81,18 @@ func main() {
 	}
 }
 
+// a urlProc is any function that accepts a URL and some
+// kind of format string (which may not actually be used
+// by some functions), and returns a slice of strings
+// derived from that URL. It's not uncommon for a urlProc
+// function to return a slice of length 1, but the return
+// type remains a slice because *some* functions need to
+// return multiple strings; e.g. the keys function.
 type urlProc func(*url.URL, string) []string
 
+// keys returns all of the keys used in the query string
+// portion of the URL. E.g. for /?one=1&two=2&three=3 it
+// will return []string{"one", "two", "three"}
 func keys(u *url.URL, _ string) []string {
 	out := make([]string, 0)
 	for key, _ := range u.Query() {
@@ -89,6 +101,9 @@ func keys(u *url.URL, _ string) []string {
 	return out
 }
 
+// values returns all of the values in the query string
+// portion of the URL. E.g. for /?one=1&two=2&three=3 it
+// will return []string{"1", "2", "3"}
 func values(u *url.URL, _ string) []string {
 	out := make([]string, 0)
 	for _, vals := range u.Query() {
@@ -99,14 +114,25 @@ func values(u *url.URL, _ string) []string {
 	return out
 }
 
+// domains returns the domain portion of the URL. e.g.
+// for http://sub.example.com/path it will return
+// []string{"sub.example.com"}
 func domains(u *url.URL, f string) []string {
 	return format(u, "%d")
 }
 
+// domains returns the path portion of the URL. e.g.
+// for http://sub.example.com/path it will return
+// []string{"/path"}
 func paths(u *url.URL, f string) []string {
 	return format(u, "%p")
 }
 
+// format is a little bit like a special sprintf for
+// URLs; it will return a single formatted string
+// based on the URL and the format string. e.g. for
+// http://example.com/path and format string "%d%p"
+// it will return example.com/path
 func format(u *url.URL, f string) []string {
 	out := &bytes.Buffer{}
 
