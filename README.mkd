@@ -114,6 +114,13 @@ sub.example.com (https)
 example.net (http)
 ```
 
+Note that if a URL does not include the data requested, there will be no output for that URL:
+
+```
+▶ echo http://example.com | unfurl format "%P"
+▶ echo http://example.com:8080 | unfurl format "%P"
+8080
+```
 
 
 ## Help
