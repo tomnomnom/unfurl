@@ -150,20 +150,54 @@ func format(u *url.URL, f string) []string {
 		}
 
 		switch r {
+
+		// a literal percent rune
 		case '%':
 			out.WriteRune('%')
+
+		// the scheme; e.g. http
 		case 's':
 			out.WriteString(u.Scheme)
+
+		// the domain; e.g. sub.example.com
 		case 'd':
 			out.WriteString(u.Hostname())
+
+		// the port; e.g. 8080
 		case 'P':
 			out.WriteString(u.Port())
+
+		// the path; e.g. /users
 		case 'p':
 			out.WriteString(u.EscapedPath())
+
+		// the query string; e.g. one=1&two=2
 		case 'q':
 			out.WriteString(u.RawQuery)
+
+		// the fragment / hash value; e.g. section-1
 		case 'f':
 			out.WriteString(u.Fragment)
+
+		// a colon if a port is specified
+		case ':':
+			if u.Port() != "" {
+				out.WriteRune(':')
+			}
+
+		// a question mark if there's a query string
+		case '?':
+			if u.RawQuery != "" {
+				out.WriteRune('?')
+			}
+
+		// a hash if there is a fragment
+		case '#':
+			if u.Fragment != "" {
+				out.WriteRune('#')
+			}
+
+		// default to literal
 		default:
 			// output untouched
 			out.WriteRune('%')
@@ -201,7 +235,10 @@ func init() {
 		h += "  %P  The port (e.g. 8080)\n"
 		h += "  %p  The path (e.g. /users)\n"
 		h += "  %q  The raw query string (e.g. a=1&b=2)\n"
-		h += "  %f  The page fragment (e.g. page-section)\n\n"
+		h += "  %f  The page fragment (e.g. page-section)\n"
+		h += "  %:  Inserts a colon if a port is specified\n"
+		h += "  %?  Inserts a question mark if a query string exists\n"
+		h += "  %#  Inserts a hash if a fragment exists\n\n"
 
 		h += "Examples:\n"
 		h += "  cat urls.txt | unfurl keys\n"
