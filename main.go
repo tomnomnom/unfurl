@@ -159,6 +159,10 @@ func format(u *url.URL, f string) []string {
 		case 's':
 			out.WriteString(u.Scheme)
 
+		// the userinfo; e.g. user:pass
+		case 'u':
+			out.WriteString(u.User.String())
+
 		// the domain; e.g. sub.example.com
 		case 'd':
 			out.WriteString(u.Hostname())
@@ -178,6 +182,12 @@ func format(u *url.URL, f string) []string {
 		// the fragment / hash value; e.g. section-1
 		case 'f':
 			out.WriteString(u.Fragment)
+
+		// an @ if user info is specified
+		case '@':
+			if u.User != nil {
+				out.WriteRune('@')
+			}
 
 		// a colon if a port is specified
 		case ':':
@@ -231,11 +241,13 @@ func init() {
 		h += "Format Directives:\n"
 		h += "  %%  A literal percent character\n"
 		h += "  %s  The request scheme (e.g. https)\n"
+		h += "  %u  The user info (e.g. user:pass)\n"
 		h += "  %d  The domain (e.g. sub.example.com)\n"
 		h += "  %P  The port (e.g. 8080)\n"
 		h += "  %p  The path (e.g. /users)\n"
 		h += "  %q  The raw query string (e.g. a=1&b=2)\n"
 		h += "  %f  The page fragment (e.g. page-section)\n"
+		h += "  %@  Inserts an @ if user info is specified\n"
 		h += "  %:  Inserts a colon if a port is specified\n"
 		h += "  %?  Inserts a question mark if a query string exists\n"
 		h += "  %#  Inserts a hash if a fragment exists\n\n"

@@ -94,11 +94,13 @@ The available format directives are:
 ```
 %%  A literal percent character
 %s  The request scheme (e.g. https)
+%u  The user info (e.g. user:pass)
 %d  The domain (e.g. sub.example.com)
 %P  The port (e.g. 8080)
 %p  The path (e.g. /users)
 %q  The raw query string (e.g. a=1&b=2)
 %f  The page fragment (e.g. page-section)
+%@  Inserts an @ if user info is specified
 %:  Inserts a colon if a port is specified
 %?  Inserts a question mark if a query string exists
 %#  Inserts a hash if a fragment exists
@@ -137,11 +139,13 @@ Modes:
 Format Directives:
   %%  A literal percent character
   %s  The request scheme (e.g. https)
+  %u  The user info (e.g. user:pass)
   %d  The domain (e.g. sub.example.com)
   %P  The port (e.g. 8080)
   %p  The path (e.g. /users)
   %q  The raw query string (e.g. a=1&b=2)
   %f  The page fragment (e.g. page-section)
+  %@  Inserts an @ if user info is specified
   %:  Inserts a colon if a port is specified
   %?  Inserts a question mark if a query string exists
   %#  Inserts a hash if a fragment exists
