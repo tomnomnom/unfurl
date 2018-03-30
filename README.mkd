@@ -104,6 +104,7 @@ The available format directives are:
 %:  Inserts a colon if a port is specified
 %?  Inserts a question mark if a query string exists
 %#  Inserts a hash if a fragment exists
+%a  Authority (alias for %u%@%d%:%P)
 ```
 
 Any characters that don't match a format directive remain untouched:
@@ -156,6 +157,7 @@ Format Directives:
   %:  Inserts a colon if a port is specified
   %?  Inserts a question mark if a query string exists
   %#  Inserts a hash if a fragment exists
+  %a  Authority (alias for %u%@%d%:%P)
 
 Examples:
   cat urls.txt | unfurl keys

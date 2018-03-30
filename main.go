@@ -207,6 +207,10 @@ func format(u *url.URL, f string) []string {
 				out.WriteRune('#')
 			}
 
+		// the authority; e.g. user:pass@example.com:8080
+		case 'a':
+			out.WriteString(format(u, "%u%@%d%:%P")[0])
+
 		// default to literal
 		default:
 			// output untouched
@@ -250,7 +254,8 @@ func init() {
 		h += "  %@  Inserts an @ if user info is specified\n"
 		h += "  %:  Inserts a colon if a port is specified\n"
 		h += "  %?  Inserts a question mark if a query string exists\n"
-		h += "  %#  Inserts a hash if a fragment exists\n\n"
+		h += "  %#  Inserts a hash if a fragment exists\n"
+		h += "  %a  Authority (alias for %u%@%d%:%P)\n\n"
 
 		h += "Examples:\n"
 		h += "  cat urls.txt | unfurl keys\n"
