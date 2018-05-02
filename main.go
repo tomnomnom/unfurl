@@ -47,7 +47,7 @@ func main() {
 	seen := make(map[string]bool)
 
 	for sc.Scan() {
-		u, err := url.Parse(sc.Text())
+		u, err := parseURL(sc.Text())
 		if err != nil {
 			if verbose {
 				fmt.Fprintf(os.Stderr, "parse failure: %s\n", err)
@@ -82,6 +82,23 @@ func main() {
 	if err := sc.Err(); err != nil {
 		fmt.Fprintf(os.Stderr, "failed to read input: %s\n", err)
 	}
+}
+
+// parseURL parses a string as a URL and returns a *url.URL
+// or any error that occured. If the initially parsed URL
+// has no scheme, http:// is prepended and the string is
+// re-parsed
+func parseURL(raw string) (*url.URL, error) {
+	u, err := url.Parse(raw)
+	if err != nil {
+		return nil, err
+	}
+
+	if u.Scheme == "" {
+		return url.Parse("http://" + raw)
+	}
+
+	return u, nil
 }
 
 // a urlProc is any function that accepts a URL and some
