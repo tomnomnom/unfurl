@@ -164,7 +164,9 @@ func format(u *url.URL, f string) []string {
 
 		// the userinfo; e.g. user:pass
 		case 'u':
-			out.WriteString(u.User.String())
+			if u.User != nil {
+				out.WriteString(u.User.String())
+			}
 
 		// the domain; e.g. sub.example.com
 		case 'd':
