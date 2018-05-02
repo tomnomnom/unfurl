@@ -47,6 +47,10 @@ func TestFormat(t *testing.T) {
 		{"https://user:pass@example.com:8080/?foo=bar#frag", "%a", "user:pass@example.com:8080", false},
 		{"https://example.com:8080/?foo=bar#frag", "%a", "example.com:8080", true},
 		{"https://example.com/?foo=bar#frag", "%a", "example.com", true},
+
+		{"https://sub.example.com:8080/foo", "%S", "sub", false},
+		{"https://sub.example.com:8080/foo", "%r", "example", false},
+		{"https://sub.example.com:8080/foo", "%t", "com", false},
 	}
 
 	for i, c := range cases {
