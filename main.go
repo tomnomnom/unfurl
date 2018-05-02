@@ -47,12 +47,21 @@ func main() {
 	seen := make(map[string]bool)
 
 	for sc.Scan() {
-		u, err := url.Parse(sc.Text())
+		text := sc.Text()
+
+	Urlparse:
+		u, err := url.Parse(text)
 		if err != nil {
 			if verbose {
 				fmt.Fprintf(os.Stderr, "parse failure: %s\n", err)
 			}
 			continue
+		}
+
+		// if the url provided doesn't have a parsed scheme, prepend http:// and parse again
+		if u.Scheme == "" {
+			text = "http://" + text
+			goto Urlparse
 		}
 
 		// some urlProc functions return multiple things,
