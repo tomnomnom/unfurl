@@ -7,6 +7,9 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"regexp"
+
+	"github.com/jakewarren/tldomains"
 )
 
 func main() {
@@ -171,6 +174,18 @@ func format(u *url.URL, f string) []string {
 		case 'P':
 			out.WriteString(u.Port())
 
+		// the subdomain; e.g. www
+		case 'S':
+			out.WriteString(extractFromDomain(u, "subdomain"))
+
+		// the root; e.g. example
+		case 'r':
+			out.WriteString(extractFromDomain(u, "root"))
+
+		// the tld; e.g. com
+		case 't':
+			out.WriteString(extractFromDomain(u, "tld"))
+
 		// the path; e.g. /users
 		case 'p':
 			out.WriteString(u.EscapedPath())
@@ -224,6 +239,32 @@ func format(u *url.URL, f string) []string {
 	return []string{out.String()}
 }
 
+func extractFromDomain(u *url.URL, selection string) string {
+
+	cache := os.TempDir() + "/tld.cache"
+	extract, err := tldomains.New(cache)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed initialize tldomains: %s\n", err)
+	}
+	// remove the port before parsing
+	portRe := regexp.MustCompile(`(?m):\d+$`)
+
+	host := extract.Parse(portRe.ReplaceAllString(u.Host, ""))
+
+	switch selection {
+	case "subdomain":
+		return host.Subdomain
+	case "root":
+		return host.Root
+	case "tld":
+		return host.Suffix
+	default:
+		return ""
+	}
+
+}
+
 func init() {
 	flag.Usage = func() {
 		h := "Format URLs provided on stdin\n\n"
@@ -247,6 +288,9 @@ func init() {
 		h += "  %s  The request scheme (e.g. https)\n"
 		h += "  %u  The user info (e.g. user:pass)\n"
 		h += "  %d  The domain (e.g. sub.example.com)\n"
+		h += "  %S  The subdomain (e.g. sub)\n"
+		h += "  %r  The root of domain (e.g. example)\n"
+		h += "  %t  The TLD (e.g. com)\n"
 		h += "  %P  The port (e.g. 8080)\n"
 		h += "  %p  The path (e.g. /users)\n"
 		h += "  %q  The raw query string (e.g. a=1&b=2)\n"
