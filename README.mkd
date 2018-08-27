@@ -78,6 +78,15 @@ Sam
 ExCo
 ```
 
+### Query String Key/Value Pairs
+
+```
+▶ cat urls.txt | unfurl keypairs
+id=123
+name=Sam
+org=ExCo
+```
+
 ### Custom Formats
 
 You can use the `format` mode to specify a custom output format:
@@ -143,6 +152,7 @@ Options:
 Modes:
   keys     Keys from the query string (one per line)
   values   Values from the query string (one per line)
+  keypairs Key=value pairs from the query string (one per line)
   domains  The hostname (e.g. sub.example.com)
   paths    The request path (e.g. /users)
   format   Specify a custom format (see below)

@@ -28,13 +28,14 @@ func main() {
 	fmtStr := flag.Arg(1)
 
 	procFn, ok := map[string]urlProc{
-		"keys":    keys,
-		"values":  values,
-		"domains": domains,
-		"domain":  domains,
-		"paths":   paths,
-		"path":    paths,
-		"format":  format,
+		"keys":     keys,
+		"values":   values,
+		"keypairs": keyPairs,
+		"domains":  domains,
+		"domain":   domains,
+		"paths":    paths,
+		"path":     paths,
+		"format":   format,
 	}[mode]
 
 	if !ok {
@@ -129,6 +130,20 @@ func values(u *url.URL, _ string) []string {
 	for _, vals := range u.Query() {
 		for _, val := range vals {
 			out = append(out, val)
+		}
+	}
+	return out
+}
+
+// keyPairs returns all the key=value pairs in
+// the query string portion of the URL. E.g for
+// /?one=1&two=2&three=3 it will return
+// []string{"one=1", "two=2", "three=3"}
+func keyPairs(u *url.URL, _ string) []string {
+	out := make([]string, 0)
+	for key, vals := range u.Query() {
+		for _, val := range vals {
+			out = append(out, fmt.Sprintf("%s=%s", key, val))
 		}
 	}
 	return out
@@ -298,6 +313,7 @@ func init() {
 		h += "Modes:\n"
 		h += "  keys     Keys from the query string (one per line)\n"
 		h += "  values   Values from the query string (one per line)\n"
+		h += "  keypairs Key=value pairs from the query string (one per line)\n"
 		h += "  domains  The hostname (e.g. sub.example.com)\n"
 		h += "  paths    The request path (e.g. /users)\n"
 		h += "  format   Specify a custom format (see below)\n\n"
