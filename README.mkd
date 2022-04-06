@@ -165,6 +165,7 @@ Modes:
   keypairs Key=value pairs from the query string (one per line)
   domains  The hostname (e.g. sub.example.com)
   paths    The request path (e.g. /users)
+  apexes   The apex domain (e.g. example.com from sub.example.com)
   format   Specify a custom format (see below)
 
 Format Directives:
