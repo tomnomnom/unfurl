@@ -15,6 +15,10 @@ import (
 
 var extractor parser.Parser
 
+func init() {
+	extractor = parser.NewDomainParser()
+}
+
 func main() {
 
 	var unique bool
@@ -51,8 +55,6 @@ func main() {
 	sc := bufio.NewScanner(os.Stdin)
 
 	seen := make(map[string]bool)
-
-	extractor = parser.NewDomainParser()
 
 	for sc.Scan() {
 		u, err := parseURL(sc.Text())
@@ -298,9 +300,9 @@ func extractFromDomain(u *url.URL, selection string) string {
 
 	// remove the port before parsing
 	portRe := regexp.MustCompile(`(?m):\d+$`)
-	
+
 	domain := portRe.ReplaceAllString(u.Host, "")
-	
+
 	switch selection {
 	case "subdomain":
 		return extractor.GetSubdomain(domain)
