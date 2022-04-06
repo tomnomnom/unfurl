@@ -7,7 +7,7 @@ Pull out bits of URLs provided on `stdin`
 If you have Go installed and configured:
 
 ```
-▶ go get -u github.com/tomnomnom/unfurl
+▶ go install github.com/tomnomnom/unfurl@latest
 ```
 
 Otherwise [download the latest binary for your platform](https://github.com/tomnomnom/unfurl/releases),
@@ -50,6 +50,16 @@ example.net
 ```
 
 The `-u`/`--unique` flag works for all modes.
+
+### Apex Domains
+
+You can extract the apex part of the domain (e.g. the `example.com` in `http://sub.example.com`) using the `apexes` mode:
+
+```
+▶ cat urls.txt | unfurl -u apexes
+example.com
+example.net
+```
 
 ### Paths
 

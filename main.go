@@ -35,6 +35,8 @@ func main() {
 		"domain":   domains,
 		"paths":    paths,
 		"path":     paths,
+		"apex":     apexes,
+		"apexes":   apexes,
 		"format":   format,
 	}[mode]
 
@@ -156,7 +158,14 @@ func domains(u *url.URL, f string) []string {
 	return format(u, "%d")
 }
 
-// domains returns the path portion of the URL. e.g.
+// apexes return the apex portion of the URL. e.g.
+// for http://sub.example.com/path it will return
+// []string{"example.com"}
+func apexes(u *url.URL, f string) []string {
+	return format(u, "%r.%t")
+}
+
+// paths returns the path portion of the URL. e.g.
 // for http://sub.example.com/path it will return
 // []string{"/path"}
 func paths(u *url.URL, f string) []string {
@@ -316,6 +325,7 @@ func init() {
 		h += "  keypairs Key=value pairs from the query string (one per line)\n"
 		h += "  domains  The hostname (e.g. sub.example.com)\n"
 		h += "  paths    The request path (e.g. /users)\n"
+		h += "  apexes   The apex domain (e.g. example.com from sub.example.com)\n"
 		h += "  format   Specify a custom format (see below)\n\n"
 
 		h += "Format Directives:\n"
