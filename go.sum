@@ -1,3 +1,5 @@
+github.com/Cgboal/DomainParser v0.0.0-20210827145802-99068439e39f h1:M2XQFmJFYRW7om3/R3u1j+h97BGbMkRowFvfXJcyHPU=
+github.com/Cgboal/DomainParser v0.0.0-20210827145802-99068439e39f/go.mod h1:a0qCkWEjo4UooxH2Z1oU1kXc1wtyMIFYEpaLx8O5JyA=
 github.com/jakewarren/tldomains v0.0.0-20220401175117-e21ec594add9 h1:Pcr+CqSKD2lPGhHX/NU/md02EBwPR56X567WzO4iew0=
 github.com/jakewarren/tldomains v0.0.0-20220401175117-e21ec594add9/go.mod h1:iNGwlKkTjgCKgRtxW5G398eul77UVW1b4eLScbkEe+c=
 golang.org/x/net v0.0.0-20220401154927-543a649e0bdd h1:zYlwaUHTmxuf6H7hwO2dgwqozQmH7zf4x+/qql4oVWc=

@@ -10,8 +10,14 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/jakewarren/tldomains"
+	"github.com/Cgboal/DomainParser"
 )
+
+var extractor parser.Parser
+
+func init() {
+	extractor = parser.NewDomainParser()
+}
 
 func main() {
 
@@ -292,28 +298,21 @@ func format(u *url.URL, f string) []string {
 
 func extractFromDomain(u *url.URL, selection string) string {
 
-	cache := os.TempDir() + "/tld.cache"
-	extract, err := tldomains.New(cache)
-
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "failed initialize tldomains: %s\n", err)
-	}
 	// remove the port before parsing
 	portRe := regexp.MustCompile(`(?m):\d+$`)
 
-	host := extract.Parse(portRe.ReplaceAllString(u.Host, ""))
+	domain := portRe.ReplaceAllString(u.Host, "")
 
 	switch selection {
 	case "subdomain":
-		return host.Subdomain
+		return extractor.GetSubdomain(domain)
 	case "root":
-		return host.Root
+		return extractor.GetDomain(domain)
 	case "tld":
-		return host.Suffix
+		return extractor.GetTld(domain)
 	default:
 		return ""
 	}
-
 }
 
 func init() {
