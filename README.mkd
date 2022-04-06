@@ -120,6 +120,7 @@ The available format directives are:
 %t  The TLD (e.g. com)
 %P  The port (e.g. 8080)
 %p  The path (e.g. /users)
+%e  The path's file extension (e.g. jpg, html)
 %q  The raw query string (e.g. a=1&b=2)
 %f  The page fragment (e.g. page-section)
 %@  Inserts an @ if user info is specified
@@ -175,6 +176,7 @@ Format Directives:
   %d  The domain (e.g. sub.example.com)
   %P  The port (e.g. 8080)
   %p  The path (e.g. /users)
+  %e  The path's file extension (e.g. jpg, html)
   %q  The raw query string (e.g. a=1&b=2)
   %f  The page fragment (e.g. page-section)
   %@  Inserts an @ if user info is specified

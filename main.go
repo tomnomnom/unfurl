@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"strings"
 
 	"github.com/jakewarren/tldomains"
 )
@@ -233,6 +234,13 @@ func format(u *url.URL, f string) []string {
 		case 'p':
 			out.WriteString(u.EscapedPath())
 
+		// the paths's file extension
+		case 'e':
+			parts := strings.Split(u.EscapedPath(), ".")
+			if len(parts) > 1 {
+				out.WriteString(parts[len(parts)-1])
+			}
+
 		// the query string; e.g. one=1&two=2
 		case 'q':
 			out.WriteString(u.RawQuery)
@@ -338,6 +346,7 @@ func init() {
 		h += "  %t  The TLD (e.g. com)\n"
 		h += "  %P  The port (e.g. 8080)\n"
 		h += "  %p  The path (e.g. /users)\n"
+		h += "  %e  The path's file extension (e.g. jpg, html)\n"
 		h += "  %q  The raw query string (e.g. a=1&b=2)\n"
 		h += "  %f  The page fragment (e.g. page-section)\n"
 		h += "  %@  Inserts an @ if user info is specified\n"
