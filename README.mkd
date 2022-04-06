@@ -7,7 +7,7 @@ Pull out bits of URLs provided on `stdin`
 If you have Go installed and configured:
 
 ```
-▶ go get -u github.com/tomnomnom/unfurl
+▶ go install github.com/tomnomnom/unfurl@latest
 ```
 
 Otherwise [download the latest binary for your platform](https://github.com/tomnomnom/unfurl/releases),
@@ -50,6 +50,16 @@ example.net
 ```
 
 The `-u`/`--unique` flag works for all modes.
+
+### Apex Domains
+
+You can extract the apex part of the domain (e.g. the `example.com` in `http://sub.example.com`) using the `apexes` mode:
+
+```
+▶ cat urls.txt | unfurl -u apexes
+example.com
+example.net
+```
 
 ### Paths
 
@@ -110,6 +120,7 @@ The available format directives are:
 %t  The TLD (e.g. com)
 %P  The port (e.g. 8080)
 %p  The path (e.g. /users)
+%e  The path's file extension (e.g. jpg, html)
 %q  The raw query string (e.g. a=1&b=2)
 %f  The page fragment (e.g. page-section)
 %@  Inserts an @ if user info is specified
@@ -155,6 +166,7 @@ Modes:
   keypairs Key=value pairs from the query string (one per line)
   domains  The hostname (e.g. sub.example.com)
   paths    The request path (e.g. /users)
+  apexes   The apex domain (e.g. example.com from sub.example.com)
   format   Specify a custom format (see below)
 
 Format Directives:
@@ -164,6 +176,7 @@ Format Directives:
   %d  The domain (e.g. sub.example.com)
   %P  The port (e.g. 8080)
   %p  The path (e.g. /users)
+  %e  The path's file extension (e.g. jpg, html)
   %q  The raw query string (e.g. a=1&b=2)
   %f  The page fragment (e.g. page-section)
   %@  Inserts an @ if user info is specified

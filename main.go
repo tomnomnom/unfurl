@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"strings"
 
 	"github.com/Cgboal/DomainParser"
 )
@@ -37,6 +38,8 @@ func main() {
 		"domain":   domains,
 		"paths":    paths,
 		"path":     paths,
+		"apex":     apexes,
+		"apexes":   apexes,
 		"format":   format,
 	}[mode]
 
@@ -160,7 +163,14 @@ func domains(u *url.URL, f string) []string {
 	return format(u, "%d")
 }
 
-// domains returns the path portion of the URL. e.g.
+// apexes return the apex portion of the URL. e.g.
+// for http://sub.example.com/path it will return
+// []string{"example.com"}
+func apexes(u *url.URL, f string) []string {
+	return format(u, "%r.%t")
+}
+
+// paths returns the path portion of the URL. e.g.
 // for http://sub.example.com/path it will return
 // []string{"/path"}
 func paths(u *url.URL, f string) []string {
@@ -227,6 +237,13 @@ func format(u *url.URL, f string) []string {
 		// the path; e.g. /users
 		case 'p':
 			out.WriteString(u.EscapedPath())
+
+		// the paths's file extension
+		case 'e':
+			parts := strings.Split(u.EscapedPath(), ".")
+			if len(parts) > 1 {
+				out.WriteString(parts[len(parts)-1])
+			}
 
 		// the query string; e.g. one=1&two=2
 		case 'q':
@@ -313,6 +330,7 @@ func init() {
 		h += "  keypairs Key=value pairs from the query string (one per line)\n"
 		h += "  domains  The hostname (e.g. sub.example.com)\n"
 		h += "  paths    The request path (e.g. /users)\n"
+		h += "  apexes   The apex domain (e.g. example.com from sub.example.com)\n"
 		h += "  format   Specify a custom format (see below)\n\n"
 
 		h += "Format Directives:\n"
@@ -325,6 +343,7 @@ func init() {
 		h += "  %t  The TLD (e.g. com)\n"
 		h += "  %P  The port (e.g. 8080)\n"
 		h += "  %p  The path (e.g. /users)\n"
+		h += "  %e  The path's file extension (e.g. jpg, html)\n"
 		h += "  %q  The raw query string (e.g. a=1&b=2)\n"
 		h += "  %f  The page fragment (e.g. page-section)\n"
 		h += "  %@  Inserts an @ if user info is specified\n"
