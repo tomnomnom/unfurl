@@ -26,6 +26,7 @@ func TestFormat(t *testing.T) {
 		{"https://example.com/foo.html?a=b&c=d", "%e", "html"},
 		{"https://example.com/foo.tar.gz?a=b&c=d", "%e", "gz"},
 		{"https://example.com/foo?a=b&c=d", "%e", ""},
+		{"https://example.com/foo.html/test?a=b&c=d", "%e", ""},
 
 		{"https://example.com/foo#bar", "%f", "bar"},
 		{"https://example.com#bar", "%f", "bar"},
