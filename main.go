@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"net/url"
@@ -44,6 +45,7 @@ func main() {
 		"path":     paths,
 		"apex":     apexes,
 		"apexes":   apexes,
+		"json":     jsonFormat,
 		"format":   format,
 	}[mode]
 
@@ -119,6 +121,106 @@ func parseURL(raw string) (*url.URL, error) {
 // type remains a slice because *some* functions need to
 // return multiple strings; e.g. the keys function.
 type urlProc func(*url.URL, string) []string
+
+type UrlStruct struct {
+	Scheme   string `json:"scheme"`
+	Opaque   string `json:"opaque"`    // encoded opaque data scheme:opaque[?query][#fragment]
+	User     string `json:"user"`      // username and password information
+	Host     string `json:"host"`      // host or host:port  [scheme:][//[userinfo@]host][/]path[?query][#fragment]
+	Path     string `json:"path"`      // path (relative paths may omit leading slash)
+	RawPath  string `json:"raw_path"`  // encoded path hint (see EscapedPath method)
+	RawQuery string `json:"raw_query"` // encoded query values, without '?'
+	Fragment string `json:"fragment"`  // fragment for references, without '#'
+
+	Parameters    []KeyValue `json:"parameters"` //
+	Url           string     `json:"url"`        //
+	Domain        string     `json:"domain"`     // The domain (e.g. sub.example.com)\n"
+	Subdomain     string     `json:"subdomain"`  // The subdomain (e.g. sub)\n"
+	Root          string     `json:"root"`       // The root of domain (e.g. example)\n"
+	TLD           string     `json:"tld"`        // The TLD (e.g. com)\n"
+	Apex          string     `json:"apex"`       //apex domain test.google.co.uk google.co.uk
+	Port          string     `json:"port"`       // The port (e.g. 8080)\n"
+	PathExtension string     `json:"extension"`  // The path's file extension (e.g. jpg, html)\n"
+}
+
+type KeyValue struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+func jsonFormat(u *url.URL, _ string) []string {
+	var parameters []KeyValue
+	for key, vals := range u.Query() {
+		for _, val := range vals {
+			parameters = append(parameters, KeyValue{Key: key, Value: val})
+		}
+	}
+	extractApexs := format(u, "%r.%t")
+	apex := ""
+	if len(extractApexs) == 1 {
+		apex = extractApexs[0]
+	}
+	domain := ""
+	extractDomains := format(u, "%d")
+	if len(extractDomains) == 1 {
+		domain = extractDomains[0]
+	}
+	subdomain := ""
+	extractSubdomains := format(u, "%S")
+	if len(extractSubdomains) == 1 {
+		subdomain = extractSubdomains[0]
+	}
+	root := ""
+	extractRoots := format(u, "%r")
+	if len(extractRoots) == 1 {
+		root = extractRoots[0]
+	}
+
+	tld := ""
+	extractTLDs := format(u, "%t")
+	if len(extractTLDs) == 1 {
+		tld = extractTLDs[0]
+	}
+
+	port := ""
+	extractPorts := format(u, "%P")
+	if len(extractPorts) == 1 {
+		port = extractPorts[0]
+	}
+
+	extension := ""
+	extractExtensions := format(u, "%e")
+	if len(extractExtensions) == 1 {
+		extension = extractExtensions[0]
+	}
+
+	newstructure := UrlStruct{
+		Scheme:        u.Scheme,
+		Opaque:        u.Opaque,
+		User:          u.User.String(),
+		Host:          u.Host,
+		Path:          u.Path,
+		RawPath:       u.RawPath,
+		RawQuery:      u.RawQuery,
+		Fragment:      u.Fragment,
+		Parameters:    parameters,
+		Apex:          apex,
+		Url:           u.String(),
+		Domain:        domain,
+		Subdomain:     subdomain,
+		Root:          root,
+		TLD:           tld,
+		Port:          port,
+		PathExtension: extension,
+	}
+	outBytes, err := json.Marshal(newstructure)
+
+	if err == nil {
+		out := bytes.NewBuffer(outBytes).String()
+		return []string{out}
+	}
+	return []string{""}
+}
 
 // keys returns all of the keys used in the query string
 // portion of the URL. E.g. for /?one=1&two=2&three=3 it
@@ -242,9 +344,17 @@ func format(u *url.URL, f string) []string {
 
 		// the paths's file extension
 		case 'e':
-			parts := strings.Split(u.EscapedPath(), ".")
-			if len(parts) > 1 {
-				out.WriteString(parts[len(parts)-1])
+			paths := strings.Split(u.EscapedPath(), "/")
+			if len(paths) > 1 {
+				parts := strings.Split(paths[len(paths)-1], ".")
+				if len(parts) > 1 {
+					out.WriteString(parts[len(parts)-1])
+				}
+			} else {
+				parts := strings.Split(u.EscapedPath(), ".")
+				if len(parts) > 1 {
+					out.WriteString(parts[len(parts)-1])
+				}
 			}
 
 		// the query string; e.g. one=1&two=2
@@ -333,6 +443,7 @@ func init() {
 		h += "  domains  The hostname (e.g. sub.example.com)\n"
 		h += "  paths    The request path (e.g. /users)\n"
 		h += "  apexes   The apex domain (e.g. example.com from sub.example.com)\n"
+		h += "  json     JSON encoded url/format objects\n"
 		h += "  format   Specify a custom format (see below)\n\n"
 
 		h += "Format Directives:\n"
