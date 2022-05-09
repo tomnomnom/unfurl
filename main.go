@@ -149,7 +149,7 @@ type KeyValue struct {
 }
 
 func jsonFormat(u *url.URL, _ string) []string {
-	var parameters []KeyValue
+	parameters := make([]KeyValue, 0)
 	for key, vals := range u.Query() {
 		for _, val := range vals {
 			parameters = append(parameters, KeyValue{Key: key, Value: val})
