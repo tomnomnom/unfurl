@@ -97,7 +97,7 @@ name=Sam
 org=ExCo
 ```
 
-### JSON formatted output
+### JSON
 ```
 ▶ cat urls.txt | unfurl json
 cat urls.txt | go run main.go json
