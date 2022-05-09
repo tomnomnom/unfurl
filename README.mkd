@@ -97,6 +97,15 @@ name=Sam
 org=ExCo
 ```
 
+### JSON formatted output
+```
+▶ cat urls.txt | unfurl json
+cat urls.txt | go run main.go json
+{"scheme":"https","opaque":"","user":"","host":"sub.example.com","path":"/users","raw_path":"","raw_query":"id=123\u0026name=Sam","fragment":"","parameters":[{"key":"id","value":"123"},{"key":"name","value":"Sam"}],"url":"https://sub.example.com/users?id=123\u0026name=Sam","domain":"sub.example.com","subdomain":"sub","root":"example","tld":"com","apex":"example.com","port":"","extension":""}
+{"scheme":"https","opaque":"","user":"","host":"sub.example.com","path":"/orgs","raw_path":"","raw_query":"org=ExCo","fragment":"about","parameters":[{"key":"org","value":"ExCo"}],"url":"https://sub.example.com/orgs?org=ExCo#about","domain":"sub.example.com","subdomain":"sub","root":"example","tld":"com","apex":"example.com","port":"","extension":""}
+{"scheme":"http","opaque":"","user":"","host":"example.net","path":"/about","raw_path":"","raw_query":"","fragment":"contact","parameters":null,"url":"http://example.net/about#contact","domain":"example.net","subdomain":"","root":"example","tld":"net","apex":"example.net","port":"","extension":""}
+```
+
 ### Custom Formats
 
 You can use the `format` mode to specify a custom output format:
@@ -167,6 +176,7 @@ Modes:
   domains  The hostname (e.g. sub.example.com)
   paths    The request path (e.g. /users)
   apexes   The apex domain (e.g. example.com from sub.example.com)
+  json     JSON encoded url/format objects
   format   Specify a custom format (see below)
 
 Format Directives:
@@ -174,6 +184,9 @@ Format Directives:
   %s  The request scheme (e.g. https)
   %u  The user info (e.g. user:pass)
   %d  The domain (e.g. sub.example.com)
+  %S  The subdomain (e.g. sub)
+  %r  The root of domain (e.g. example)
+  %t  The TLD (e.g. com)
   %P  The port (e.g. 8080)
   %p  The path (e.g. /users)
   %e  The path's file extension (e.g. jpg, html)
