@@ -15,9 +15,11 @@ import (
 )
 
 var extractor parser.Parser
+var portRe *regexp.Regexp
 
 func init() {
-	extractor = parser.NewDomainParser()
+    portRe = regexp.MustCompile(`(?m):\d+$`)
+    extractor = parser.NewDomainParser()
 }
 
 func main() {
@@ -409,8 +411,6 @@ func format(u *url.URL, f string) []string {
 func extractFromDomain(u *url.URL, selection string) string {
 
 	// remove the port before parsing
-	portRe := regexp.MustCompile(`(?m):\d+$`)
-
 	domain := portRe.ReplaceAllString(u.Host, "")
 
 	switch selection {
