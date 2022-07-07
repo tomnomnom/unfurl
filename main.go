@@ -11,7 +11,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/Cgboal/DomainParser"
+	parser "github.com/Cgboal/DomainParser"
 )
 
 var extractor parser.Parser
@@ -51,6 +51,7 @@ func main() {
 
 	if !ok {
 		fmt.Fprintf(os.Stderr, "unknown mode: %s\n", mode)
+		flag.Usage()
 		return
 	}
 
