@@ -57,7 +57,7 @@ func main() {
 
 	sc := bufio.NewScanner(os.Stdin)
 	buf := make([]byte, 0, 64*1024)
-	sc.Buffer(buf, 128*1024)
+	sc.Buffer(buf, 1024*1024)
 
 	seen := make(map[string]bool)
 
