@@ -14,8 +14,8 @@ Otherwise [download the latest binary for your platform](https://github.com/tomn
 extract it and move it to somewhere in your `$PATH` (e.g. `/usr/bin/`):
 
 ```
-▶ wget https://github.com/tomnomnom/unfurl/releases/download/v0.0.1/unfurl-linux-amd64-0.0.1.tgz
-▶ tar xzf unfurl-linux-amd64-0.0.1.tgz
+▶ wget https://github.com/tomnomnom/unfurl/releases/download/v0.4.3/unfurl-linux-amd64-0.4.3.tgz
+▶ tar xzf unfurl-linux-amd64-0.4.3.tgz
 ▶ sudo mv unfurl /usr/bin/
 ```
 
